@@ -1,0 +1,46 @@
+{
+  "schema_version": "mock-artifacts-lock.v1",
+  "status": "mock_only_not_run",
+  "validation": {
+    "command": "node scripts/validate-artifacts.mjs",
+    "exit_code": 0,
+    "result": "ARTIFACT VALIDATION PASS",
+    "counts": {
+      "schemas": 16,
+      "interfaces": 26,
+      "business_tools": 24,
+      "mock_cards": 34,
+      "cal_tasks": 8,
+      "cal_slots": 24,
+      "diagnostic_tasks": 35,
+      "diagnostic_slots": 105,
+      "holdout_tasks": 15,
+      "holdout_slots": 45,
+      "judge_readiness_samples": 12,
+      "judge_readiness_slots": 72,
+      "dependencies": 19,
+      "hashed_artifacts": 40
+    }
+  },
+  "source_records": {
+    "artifact_hash_manifest": {
+      "path": "config/artifact_hashes.v1.json",
+      "sha256": "32d510301468b66b468357802a26a1fe5e34272c68855d486a5fd15d8df8854e"
+    },
+    "validator": {
+      "path": "scripts/validate-artifacts.mjs",
+      "sha256": "0223619387ba0a3990c5ff8d33fa827b8e1e7077234d40eb510e75937dfa545a"
+    },
+    "approval_conditions": {
+      "path": "harness-baseline/approval-conditions.md",
+      "sha256": "3ca48f50ea7ee695ff8348a5fbc0c11f08d239fe487cb6640ced93662bb51b54"
+    }
+  },
+  "isolation": {
+    "three_way_card_fixture_evidence_failure_state_intersections": 0,
+    "holdout_status": "mock-sealed-candidate",
+    "holdout_content_in_public_pi_fork": false,
+    "formal_requirement": "Move the real frozen holdout set to a separate private non-submodule repository and mount it read-only only after H-FULL freeze."
+  },
+  "boundary": "The complete Mock package exists in the experiment workspace. This public Pi Fork stores only counts, hashes, approval rules, and source locks; it stores no holdout task content. Mock completeness is not CAL, Judge readiness, B0 freeze, diagnosis, or uplift evidence."
+}

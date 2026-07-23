@@ -1,0 +1,42 @@
+{
+  "schema_version": "prd-sync-lock.v1",
+  "authority": {
+    "rule": "baseline_prd_wins_for_b0_conflicts",
+    "baseline": {
+      "document_id": "LexWd2oGjoqpU2xOVRbcXL7Lnre",
+      "revision": 83,
+      "markdown_sha256": "5bb9350707cb70909c501bdd39da943250590d57d4c802b25ca93f4897da606b"
+    },
+    "upstream": {
+      "document_id": "IH0AdLTo6o2RrzxjGqtcT8ZInad",
+      "revision": 290,
+      "markdown_sha256": "1763bd9c63f6e99afb996bb2ea64a5cba4fa479a9aca988897e8464f9418b2da"
+    }
+  },
+  "sync_state": {
+    "status": "synced",
+    "synced_decisions": [
+      "Q33",
+      "Q36",
+      "Q40",
+      "Q41",
+      "Q45",
+      "Q48",
+      "Q52",
+      "Q53"
+    ],
+    "pending_non_blocking": [
+      {
+        "decision": "Q42",
+        "status": "pending",
+        "blocks_b0": false
+      },
+      {
+        "decision": "Q46",
+        "status": "pending",
+        "blocks_b0": false
+      }
+    ]
+  },
+  "boundary": "This lock records document synchronization only; it is not CAL, readiness, freeze, or uplift evidence."
+}

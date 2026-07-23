@@ -1,0 +1,87 @@
+{
+  "schema_version": "pi-verification-results.v1",
+  "release_commit": "20be4b18d4c57487f8993d2762bace129f0cf7c6",
+  "status": "pass_with_resolved_setup_incidents",
+  "environment": {
+    "node": "v22.23.0",
+    "npm": "10.9.8",
+    "platform": "Darwin",
+    "architecture": "arm64",
+    "credentials_used": false,
+    "network_used": true,
+    "network_purpose": "Downloaded the published @earendil-works/pi-ai@0.81.1 npm package to hydrate git-ignored model data for upstream coding-agent tests; baseline verifier itself is offline."
+  },
+  "started_at": "2026-07-23T19:50:59+08:00",
+  "completed_at": "2026-07-23T19:55:00+08:00",
+  "commands": [
+    {
+      "command": "node harness-baseline/scripts/verify.mjs",
+      "cwd": ".",
+      "exit_code": 0,
+      "result": "PASS 7/7 verification checks passed"
+    },
+    {
+      "command": "node ../../node_modules/vitest/dist/cli.js --run test/agent-loop.test.ts",
+      "cwd": "packages/agent",
+      "exit_code": 1,
+      "result": "Setup command path was wrong for this hoisted layout: root node_modules had no vitest CLI. Superseded by the package-local command below."
+    },
+    {
+      "command": "node node_modules/vitest/dist/cli.js --run test/agent-loop.test.ts",
+      "cwd": "packages/agent",
+      "exit_code": 0,
+      "result": "1 test file passed; 21 tests passed"
+    },
+    {
+      "command": "node node_modules/vitest/dist/cli.js --run test/resource-loader.test.ts -t \"should skip AGENTS.md and CLAUDE.md discovery when noContextFiles is true\"",
+      "cwd": "packages/coding-agent",
+      "exit_code": 1,
+      "result": "Initial setup failure before test collection: packages/ai/src/providers/data/amazon-bedrock.json was absent. Superseded after temporary v0.81.1 published model-data hydration."
+    },
+    {
+      "command": "node node_modules/vitest/dist/cli.js --run test/sdk-session-manager.test.ts",
+      "cwd": "packages/coding-agent",
+      "exit_code": 1,
+      "result": "Initial setup failure before test collection: packages/ai/src/providers/data/amazon-bedrock.json was absent. Superseded after temporary v0.81.1 published model-data hydration."
+    },
+    {
+      "command": "node node_modules/vitest/dist/cli.js --run test/session-manager/custom-session-id.test.ts",
+      "cwd": "packages/coding-agent",
+      "exit_code": 0,
+      "result": "1 test file passed; 12 tests passed"
+    },
+    {
+      "command": "npm pack @earendil-works/pi-ai@0.81.1 --ignore-scripts, then copy package/dist/providers/data to packages/ai/src/providers/data for test setup",
+      "cwd": ".",
+      "exit_code": 0,
+      "result": "Published v0.81.1 git-ignored model data made available temporarily; no lifecycle scripts, credentials, source edits, lockfile edits, or package manifest edits."
+    },
+    {
+      "command": "node node_modules/vitest/dist/cli.js --run test/resource-loader.test.ts -t \"should skip AGENTS.md and CLAUDE.md discovery when noContextFiles is true\"",
+      "cwd": "packages/coding-agent",
+      "exit_code": 0,
+      "result": "1 targeted test passed; 21 tests skipped"
+    },
+    {
+      "command": "node node_modules/vitest/dist/cli.js --run test/sdk-session-manager.test.ts",
+      "cwd": "packages/coding-agent",
+      "exit_code": 0,
+      "result": "1 test file passed; 3 tests passed"
+    }
+  ],
+  "cleanup": {
+    "workspace_model_data_removed": true,
+    "recoverable_locations": [
+      "/Users/celinedon/.Trash/pi-ai-v0.81.1-generated-data-20260723-1953",
+      "/Users/celinedon/.Trash/pi-ai-model-data-tmp-20260723-1953"
+    ],
+    "final_git_scope": "Only harness-baseline/ is untracked or modified in the Pi repository."
+  },
+  "remaining_engineering_debug": [
+    "Live Codex request proves final wire payload parallel_tool_calls=false.",
+    "Live multi-action response proves block-all behavior and policy-compliant repair/termination with no business side effects.",
+    "Live usage and context-window fields are reconciled with Provider observations.",
+    "onPayload/onResponse callback invocation and redaction are verified for each formal Provider/API pair."
+  ],
+  "boundary": "Offline source and test verification is not CAL, readiness, freeze, formal diagnosis, or uplift evidence."
+}

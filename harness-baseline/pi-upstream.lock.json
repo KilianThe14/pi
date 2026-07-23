@@ -1,0 +1,40 @@
+{
+  "schema_version": "pi-upstream-lock.v1",
+  "repositories": {
+    "upstream": "https://github.com/earendil-works/pi",
+    "fork": "https://github.com/KilianThe14/pi",
+    "legacy_redirect": "https://github.com/badlogic/pi-mono"
+  },
+  "release": {
+    "tag": "v0.81.1",
+    "published_at": "2026-07-21T16:45:17Z",
+    "commit_sha": "20be4b18d4c57487f8993d2762bace129f0cf7c6",
+    "source_archive": {
+      "url": "https://github.com/earendil-works/pi/archive/refs/tags/v0.81.1.tar.gz",
+      "sha256": "fb9bb7d7e8887e890824a08de588124350045da2cce763c5e6fd98d7141af31c"
+    }
+  },
+  "upstream_main_snapshot": {
+    "commit_sha": "fc85bdd88be93b1e9a6b6bcfa41c684282ec79cc",
+    "purpose": "audit snapshot only; baseline does not float with main"
+  },
+  "fork_lock": {
+    "branch": "baseline-v0",
+    "upstream_base_commit": "20be4b18d4c57487f8993d2762bace129f0cf7c6",
+    "expected_tag_commit": "20be4b18d4c57487f8993d2762bace129f0cf7c6",
+    "head_policy": "The branch HEAD must descend from upstream_base_commit; Git history is the authoritative exact Fork record."
+  },
+  "runtime": {
+    "node_requirement": ">=22.19.0",
+    "package_manager": "npm",
+    "exact_npm_version_pinned": false,
+    "reproducible_install_command": "npm ci --ignore-scripts"
+  },
+  "lockfile": {
+    "path": "package-lock.json",
+    "lockfile_version": 3,
+    "requires": true,
+    "workspace_install": true,
+    "root_package_manager_field_present": false
+  }
+}

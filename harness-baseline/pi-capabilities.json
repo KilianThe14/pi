@@ -1,0 +1,255 @@
+{
+  "schema_version": "pi-capabilities.v1",
+  "release_commit": "20be4b18d4c57487f8993d2762bace129f0cf7c6",
+  "status_vocabulary": [
+    "upstream_verified",
+    "adapter_verified",
+    "engineering_debug_required",
+    "unsupported"
+  ],
+  "capabilities": [
+    {
+      "id": "tool_calling_and_events",
+      "status": "upstream_verified",
+      "claim": "The normalized agent loop exposes assistant/tool lifecycle events and executes tool calls.",
+      "source_evidence": [
+        {
+          "path": "packages/agent/src/agent-loop.ts",
+          "lines": "192-220, 763-770",
+          "evidence": "assistant responses are inspected for toolCall items and tool_execution_end is emitted"
+        },
+        {
+          "path": "packages/agent/src/types.ts",
+          "lines": "422-437",
+          "evidence": "AgentEvent declares message and tool execution lifecycle events"
+        }
+      ],
+      "verification": [
+        "cd packages/agent && node node_modules/vitest/dist/cli.js --run test/agent-loop.test.ts"
+      ],
+      "boundary": "Offline fake-stream tests verify Pi behavior, not a live Provider transport."
+    },
+    {
+      "id": "single_action_per_response",
+      "status": "adapter_verified",
+      "claim": "The neutral beforeToolCall adapter blocks all calls when one assistant response contains more than one tool call.",
+      "source_evidence": [
+        {
+          "path": "packages/agent/src/agent-loop.ts",
+          "lines": "418-425, 619-642",
+          "evidence": "upstream otherwise executes all calls; beforeToolCall can block each call"
+        },
+        {
+          "path": "harness-baseline/src/baseline-adapter.mjs",
+          "lines": "1-39",
+          "evidence": "adapter counts normalized toolCall items and blocks the whole multi-action batch"
+        }
+      ],
+      "verification": [
+        "node --test harness-baseline/tests/baseline-adapter.test.mjs"
+      ],
+      "boundary": "Live Provider and complete Runner integration remain engineering_debug_required; sequential mode alone is not a one-action limit."
+    },
+    {
+      "id": "parallel_tool_calls_false",
+      "status": "adapter_verified",
+      "claim": "The neutral onPayload adapter returns a non-mutating payload copy with parallel_tool_calls=false.",
+      "source_evidence": [
+        {
+          "path": "packages/ai/src/api/openai-codex-responses.ts",
+          "lines": "483-505",
+          "evidence": "v0.81.1 Codex request builder defaults parallel_tool_calls to true"
+        },
+        {
+          "path": "packages/ai/src/types.ts",
+          "lines": "137-145",
+          "evidence": "onPayload can inspect or replace the final request payload"
+        },
+        {
+          "path": "harness-baseline/src/baseline-adapter.mjs",
+          "lines": "10-21",
+          "evidence": "adapter forces the top-level field to false"
+        }
+      ],
+      "verification": [
+        "node --test harness-baseline/tests/baseline-adapter.test.mjs"
+      ],
+      "boundary": "Provider acceptance and actual wire payload require credentialed engineering_debug; this is not asserted as cross-Provider behavior."
+    },
+    {
+      "id": "disable_coding_tools",
+      "status": "upstream_verified",
+      "claim": "coding-agent can disable all tools or built-ins and can apply explicit allow/exclude lists.",
+      "source_evidence": [
+        {
+          "path": "packages/coding-agent/src/core/sdk.ts",
+          "lines": "61-71, 246-250",
+          "evidence": "noTools, tools, and excludeTools determine the active set"
+        },
+        {
+          "path": "packages/coding-agent/docs/sdk.md",
+          "lines": "491-520",
+          "evidence": "SDK tool controls are documented"
+        }
+      ],
+      "verification": [
+        "static source contract in node harness-baseline/scripts/verify.mjs"
+      ],
+      "boundary": "Formal/dev Runner configuration must still assert the final exposed tool-name set."
+    },
+    {
+      "id": "dedicated_agent_dir",
+      "status": "upstream_verified",
+      "claim": "createAgentSession accepts agentDir and derives auth, model, resource, and default session paths from it.",
+      "source_evidence": [
+        {
+          "path": "packages/coding-agent/src/core/sdk.ts",
+          "lines": "170-183",
+          "evidence": "agentDir is resolved and used for runtime/resource/session construction"
+        },
+        {
+          "path": "packages/coding-agent/docs/sdk.md",
+          "lines": "330-365",
+          "evidence": "agentDir-controlled resources are documented"
+        }
+      ],
+      "verification": [
+        "cd packages/coding-agent && node node_modules/vitest/dist/cli.js --run test/sdk-session-manager.test.ts"
+      ],
+      "boundary": "A dedicated directory isolates Pi configuration only if the Runner supplies a fresh controlled path."
+    },
+    {
+      "id": "no_context_files",
+      "status": "upstream_verified",
+      "claim": "DefaultResourceLoader with noContextFiles=true returns no discovered AGENTS.md or CLAUDE.md files.",
+      "source_evidence": [
+        {
+          "path": "packages/coding-agent/src/core/resource-loader.ts",
+          "lines": "463-471",
+          "evidence": "noContextFiles selects an empty agentsFiles list"
+        },
+        {
+          "path": "packages/coding-agent/test/resource-loader.test.ts",
+          "lines": "358-367",
+          "evidence": "upstream test covers AGENTS.md and CLAUDE.md suppression"
+        }
+      ],
+      "verification": [
+        "cd packages/coding-agent && node node_modules/vitest/dist/cli.js --run test/resource-loader.test.ts -t \"should skip AGENTS.md and CLAUDE.md discovery when noContextFiles is true\""
+      ],
+      "boundary": "This suppresses context-file discovery; extensions, skills, prompts, and themes require their own disable controls."
+    },
+    {
+      "id": "system_prompt_override",
+      "status": "upstream_verified",
+      "claim": "DefaultResourceLoader can replace the discovered system prompt.",
+      "source_evidence": [
+        {
+          "path": "packages/coding-agent/src/core/resource-loader.ts",
+          "lines": "155-156, 474-478",
+          "evidence": "systemPromptOverride transforms the base prompt"
+        },
+        {
+          "path": "packages/coding-agent/docs/sdk.md",
+          "lines": "474-489",
+          "evidence": "full replacement through ResourceLoader is documented"
+        }
+      ],
+      "verification": [
+        "static source contract in node harness-baseline/scripts/verify.mjs"
+      ],
+      "boundary": "The Runner must compare the resolved prompt text/hash; setting an option alone is not proof of the final Provider prompt."
+    },
+    {
+      "id": "provider_request_observability",
+      "status": "upstream_verified",
+      "claim": "StreamOptions exposes final-payload and response status/header callbacks.",
+      "source_evidence": [
+        {
+          "path": "packages/ai/src/types.ts",
+          "lines": "110-145",
+          "evidence": "onPayload and onResponse callback contracts"
+        }
+      ],
+      "verification": [
+        "static source contract in node harness-baseline/scripts/verify.mjs"
+      ],
+      "boundary": "The callback contract is source-verified. Per-Provider invocation and redaction need engineering_debug; onResponse does not expose the raw body."
+    },
+    {
+      "id": "usage_observability",
+      "status": "upstream_verified",
+      "claim": "Normalized AssistantMessage includes token/cache/reasoning/cost usage fields.",
+      "source_evidence": [
+        {
+          "path": "packages/ai/src/types.ts",
+          "lines": "359-400",
+          "evidence": "Usage and AssistantMessage declarations"
+        }
+      ],
+      "verification": [
+        "static source contract in node harness-baseline/scripts/verify.mjs"
+      ],
+      "boundary": "Field presence and semantics vary by Provider; live raw-to-normalized reconciliation is engineering_debug_required."
+    },
+    {
+      "id": "context_window",
+      "status": "upstream_verified",
+      "claim": "The selected Pi Model carries a numeric contextWindow catalog value.",
+      "source_evidence": [
+        {
+          "path": "packages/ai/src/types.ts",
+          "lines": "709-725",
+          "evidence": "Model requires contextWindow"
+        }
+      ],
+      "verification": [
+        "static source contract in node harness-baseline/scripts/verify.mjs"
+      ],
+      "boundary": "This is Pi model-catalog metadata, not a live Provider limit probe; the resolved provider/model/value must be logged."
+    },
+    {
+      "id": "session_isolation",
+      "status": "upstream_verified",
+      "claim": "SessionManager.inMemory creates non-persisted sessions and newSession assigns a fresh session id unless explicitly overridden.",
+      "source_evidence": [
+        {
+          "path": "packages/coding-agent/src/core/session-manager.ts",
+          "lines": "930-955, 1567-1570",
+          "evidence": "new session identity and non-persisted factory"
+        },
+        {
+          "path": "packages/coding-agent/test/sdk-session-manager.test.ts",
+          "lines": "49-64",
+          "evidence": "SDK preserves explicit in-memory session manager and verifies no persistence"
+        }
+      ],
+      "verification": [
+        "cd packages/coding-agent && node node_modules/vitest/dist/cli.js --run test/sdk-session-manager.test.ts"
+      ],
+      "boundary": "Runner must create a new manager per run and must not call continueRecent/open or reuse mutable tool/failure state."
+    },
+    {
+      "id": "raw_provider_response_body",
+      "status": "unsupported",
+      "claim": "StreamOptions does not expose the raw Provider response body through onResponse.",
+      "source_evidence": [
+        {
+          "path": "packages/ai/src/types.ts",
+          "lines": "110-145",
+          "evidence": "ProviderResponse contains status and headers only"
+        }
+      ],
+      "verification": [
+        "static source contract in node harness-baseline/scripts/verify.mjs"
+      ],
+      "boundary": "Use normalized stream events/AssistantMessage and separately approved transport instrumentation if raw body capture is required."
+    }
+  ],
+  "engineering_debug_required": [
+    "Capture a credentialed Codex Provider request and prove the final wire payload contains parallel_tool_calls=false.",
+    "Exercise a live multi-tool response and prove the Runner blocks the entire batch without business side effects, then repairs or terminates within policy.",
+    "Reconcile live Provider usage and context-window metadata with Pi normalized fields.",
+    "Confirm onPayload/onResponse callback invocation and redaction for every formal Provider/API pair."
+  ]
+}
