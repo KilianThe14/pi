@@ -16,11 +16,11 @@ This directory is the auditable Pi-side record for B0. It adds no business strat
 
 ## PRD synchronization
 
-`prd-sync.lock.json` binds Baseline PRD revision 83 and upstream PRD revision 290 to their fetched Markdown hashes. Q33/Q36/Q40/Q41/Q45/Q48/Q52/Q53 are synchronized. Q42 and Q46 remain pending and non-blocking for B0; this directory does not resolve them.
+`prd-sync.lock.json` binds Baseline PRD revision 83 and upstream PRD revision 290 to their fetched Markdown hashes. The upstream hash uses the documented `lark-cli JSON | jq -j .data.document.content` byte stream so different JSON runtimes cannot silently normalize Unicode surrogate data differently. Q33/Q36/Q40/Q41/Q45/Q48/Q52/Q53 are synchronized. Q42 and Q46 remain pending and non-blocking for B0; this directory does not resolve them.
 
 ## Mock artifacts and approval
 
-`mock-artifacts.lock.json` records the validated Mock package counts and source hashes without publishing holdout task content in this public Fork. `approval-conditions.md` defines G0—G8, role separation, and the difference between `PASS`, `REWORK`, `BLOCKED`, and `NOT_RUN`.
+`mock-artifacts.lock.json` records the validated Mock package counts and source hashes without publishing holdout task content in this public Fork. `approval-conditions.md` defines G0—G9, role separation, diagnostic completion, invalidation, and the difference between `PASS`, `REWORK`, `BLOCKED`, and `NOT_RUN`.
 
 The complete Mock package remains in the experiment workspace. A real frozen holdout set must move to a separate private non-submodule repository before formal evaluation.
 

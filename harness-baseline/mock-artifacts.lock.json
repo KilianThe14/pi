@@ -25,15 +25,19 @@
   "source_records": {
     "artifact_hash_manifest": {
       "path": "config/artifact_hashes.v1.json",
-      "sha256": "32d510301468b66b468357802a26a1fe5e34272c68855d486a5fd15d8df8854e"
+      "sha256": "5734124236fc27c8852ffa86c90ddad87f4b94caf5e52bd4884ee07b45522f01"
     },
     "validator": {
       "path": "scripts/validate-artifacts.mjs",
-      "sha256": "0223619387ba0a3990c5ff8d33fa827b8e1e7077234d40eb510e75937dfa545a"
+      "sha256": "2ab84b620a29fcc3c34f592f89b48a06e75d06def6e15cfe7b39fb9449d7e7f9"
+    },
+    "prd_auditor": {
+      "path": "scripts/audit-upstream-prd.mjs",
+      "sha256": "a9e2a65f621baa4dc3a1c935523662045a7f9b76cb92a2f64b778ef577309e98"
     },
     "approval_conditions": {
       "path": "harness-baseline/approval-conditions.md",
-      "sha256": "3ca48f50ea7ee695ff8348a5fbc0c11f08d239fe487cb6640ced93662bb51b54"
+      "sha256": "9807874902c0ea4b71865c53644158364a7df0c45cc0a53a5f7bcb9347377694"
     }
   },
   "isolation": {

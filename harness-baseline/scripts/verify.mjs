@@ -85,8 +85,13 @@ check("PRD synchronization lock is exact", () => {
 	assert.equal(lock.authority.upstream.revision, 290);
 	assert.equal(
 		lock.authority.upstream.markdown_sha256,
-		"1763bd9c63f6e99afb996bb2ea64a5cba4fa479a9aca988897e8464f9418b2da",
+		"e502d6475944a8c197168c03ebdb95c66d49f22d9ab747f08284f2904b1d21bb",
 	);
+	assert.equal(
+		lock.authority.upstream.hash_algorithm,
+		"sha256(lark-cli JSON | jq -j .data.document.content)",
+	);
+	assert.equal(lock.authority.upstream.content_bytes, 149917);
 	assert.deepEqual(lock.sync_state.synced_decisions, [
 		"Q33",
 		"Q36",
@@ -173,6 +178,47 @@ check("verification results contain successful required runs", () => {
 	assert.equal(passedCommands.some((value) => value.includes("test/agent-loop.test.ts")), true);
 	assert.equal(passedCommands.some((value) => value.includes("noContextFiles is true")), true);
 	assert.equal(passedCommands.some((value) => value.includes("test/sdk-session-manager.test.ts")), true);
+	assert.equal(results.final_verification.verifier_check_count, 8);
+	assert.equal(results.final_verification.adapter_test_count, 5);
+	assert.equal(
+		results.final_verification.verifier_sha256,
+		createHash("sha256")
+			.update(readFileSync(join(baselineDir, "scripts", "verify.mjs")))
+			.digest("hex"),
+	);
+	assert.equal(
+		results.final_verification.adapter_sha256,
+		createHash("sha256")
+			.update(readFileSync(join(baselineDir, "src", "baseline-adapter.mjs")))
+			.digest("hex"),
+	);
+	assert.equal(
+		results.final_verification.adapter_test_sha256,
+		createHash("sha256")
+			.update(readFileSync(join(baselineDir, "tests", "baseline-adapter.test.mjs")))
+			.digest("hex"),
+	);
+	for (const [field, path] of [
+		["capability_manifest_sha256", "pi-capabilities.json"],
+		["upstream_lock_sha256", "pi-upstream.lock.json"],
+		["prd_sync_lock_sha256", "prd-sync.lock.json"],
+		["mock_artifacts_lock_sha256", "mock-artifacts.lock.json"],
+		["approval_conditions_sha256", "approval-conditions.md"],
+	]) {
+		assert.equal(
+			results.final_verification[field],
+			createHash("sha256").update(readFileSync(join(baselineDir, path))).digest("hex"),
+		);
+	}
+	if (results.final_verification.validated_fork_commit) {
+		command([
+			"git",
+			"merge-base",
+			"--is-ancestor",
+			results.final_verification.validated_fork_commit,
+			"HEAD",
+		]);
+	}
 });
 
 check("pinned upstream source contracts still exist", () => {

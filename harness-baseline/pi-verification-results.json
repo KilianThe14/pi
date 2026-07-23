@@ -12,13 +12,13 @@
     "network_purpose": "Downloaded the published @earendil-works/pi-ai@0.81.1 npm package to hydrate git-ignored model data for upstream coding-agent tests; baseline verifier itself is offline."
   },
   "started_at": "2026-07-23T19:50:59+08:00",
-  "completed_at": "2026-07-23T19:55:00+08:00",
+  "completed_at": "2026-07-23T20:10:14+08:00",
   "commands": [
     {
       "command": "node harness-baseline/scripts/verify.mjs",
       "cwd": ".",
       "exit_code": 0,
-      "result": "PASS 7/7 verification checks passed"
+      "result": "PASS 8/8 verification checks passed"
     },
     {
       "command": "node ../../node_modules/vitest/dist/cli.js --run test/agent-loop.test.ts",
@@ -69,6 +69,57 @@
       "result": "1 test file passed; 3 tests passed"
     }
   ],
+  "final_verification": {
+    "performed_at": "2026-07-23T20:10:14+08:00",
+    "verifier_check_count": 8,
+    "adapter_test_count": 5,
+    "verifier_sha256": "4dc0ea6994b69f396ecb10206289847a1c3b1f310e91265459d1fdeec394bd60",
+    "adapter_sha256": "f6b2f5af6368ec752bc50cf9872861f5a2a2478398946ae875dfa47df210f6bc",
+    "adapter_test_sha256": "85f346b32abc42fa038655ce41a25e72f504c63b380eaf63fc8a8b1106653de3",
+    "capability_manifest_sha256": "9f0644d0c21fa84910ef2782556ca251d975442afff699d94153a5479550f595",
+    "upstream_lock_sha256": "f95732bd172bff52ee54792a6bce49ffe36c85027ce5fd14f2998cf59a4732fb",
+    "prd_sync_lock_sha256": "f758df252373a39d99084fc9dbbe3ee2cf726a9f98f0c06e9b561d2c56367e4d",
+    "mock_artifacts_lock_sha256": "72194abf52eab66660ba013f62a30deb0549d0b566087441d8bfdab53c50cc86",
+    "approval_conditions_sha256": "9807874902c0ea4b71865c53644158364a7df0c45cc0a53a5f7bcb9347377694",
+    "validated_fork_commit": null,
+    "result": "PASS 8/8 verifier checks and PASS 5/5 adapter tests"
+  },
+  "final_upstream_test_rerun": {
+    "performed_at": "2026-07-23T20:09:53+08:00",
+    "network_used": false,
+    "setup": "Reused the previously downloaded published @earendil-works/pi-ai@0.81.1 provider data from its recoverable Trash location, copied it only to the git-ignored test setup path, and removed it recoverably after the run.",
+    "commands": [
+      {
+        "command": "node node_modules/vitest/dist/cli.js --run test/agent-loop.test.ts",
+        "cwd": "packages/agent",
+        "exit_code": 0,
+        "result": "1 test file passed; 21 tests passed"
+      },
+      {
+        "command": "node node_modules/vitest/dist/cli.js --run test/resource-loader.test.ts -t \"should skip AGENTS.md and CLAUDE.md discovery when noContextFiles is true\"",
+        "cwd": "packages/coding-agent",
+        "exit_code": 0,
+        "result": "1 targeted test passed; 21 tests skipped"
+      },
+      {
+        "command": "node node_modules/vitest/dist/cli.js --run test/sdk-session-manager.test.ts",
+        "cwd": "packages/coding-agent",
+        "exit_code": 0,
+        "result": "1 test file passed; 3 tests passed"
+      },
+      {
+        "command": "node node_modules/vitest/dist/cli.js --run test/session-manager/custom-session-id.test.ts",
+        "cwd": "packages/coding-agent",
+        "exit_code": 0,
+        "result": "1 test file passed; 12 tests passed"
+      }
+    ],
+    "cleanup": {
+      "workspace_model_data_removed": true,
+      "recoverable_location": "/Users/celinedon/.Trash/pi-ai-v0.81.1-final-validation-data-20260723-2008",
+      "git_status_scope": "Only the intended harness-baseline evidence files differ from the last pushed commit."
+    }
+  },
   "cleanup": {
     "workspace_model_data_removed": true,
     "recoverable_locations": [

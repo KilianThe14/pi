@@ -135,12 +135,33 @@ Mock readiness 材料本身不能通过本门禁。实际执行必须满足：
 
 hash 在审批期间变化：全部受影响门禁重新执行。
 
-### G8 正式诊断启动
+### G8 正式诊断启动与完成
 
-1. 105 个计划位置已在 run index 中预登记。
-2. formal 模式单并发、无人干预，测试集仓库未挂载。
-3. 日志、raw refs、hash、Judge score refs 和 replacement 链能双向追溯。
+启动条件：
+
+1. 105 个计划位置已在 `experiment_run_index` 中预登记。
+2. formal 模式单并发、无人干预，冻结留出测试集仓库未挂载。
+3. 日志、raw refs、hash、Judge score refs 和 replacement 链已启用双向追溯。
 4. 诊断只用于发现和归因，不作为冻结留出测试分数。
+
+转为 `diagnostic_complete` 的通过条件：
+
+1. 105 个计划位置均有 accepted run，或有规则确认的 original → invalid → replacement 链；阶段 replacement 总数不超过 11。
+2. 每个 accepted run 均能从 `experiment_run_index` 追溯到 `run_event_trace`、脱敏 raw request/response refs、final、规则结果和双 Judge score refs，并能反向追溯。
+3. 所有候选失败均进入 `failure_record`；只有 `cause_class=agent`、`root_cause_status=confirmed`、`replay_status=passed`、`backlog_decision=accepted` 的记录可创建 Harness 改进项。
+4. `integrity_report` 对任务、计划位置、accepted run、invalid/replacement、trace、final、评分和 hash 的完整性检查全部为 PASS。
+5. `diagnostic_summary` 报告实际分母、无效运行、replacement、失败类别和未解决项，不删除失败 run，不把诊断分数当作泛化或 uplift 结论。
+6. 独立评测审查者核对完整运行索引、失败记录、integrity report 和 summary 后签署。
+
+实际诊断未启动：`NOT_RUN`；证据缺失或追溯不完整：`REWORK`；达到 replacement 上限仍不足 105 个 accepted 位置：`infrastructure_incomplete`；发现数据泄漏、跨集合污染或无法安全恢复的权限问题：`BLOCKED`。
+
+### G9 变更与失效
+
+1. 任一 Prompt、模型/Provider、Pi/Fork/Runner、工具、Fixture、run policy、Schema、Judge、输入投影、评分或依赖 hash 变化，都必须记录变更 diff、影响范围、新 hash、批准人和需要重跑的门禁。
+2. 纯展示变更只有在提供机器可验证的行为等价性证据后，才可保留未受影响的批准；无法证明等价时按行为变更处理。
+3. 行为相关变更立即将候选置为 `invalidated`，不得沿用旧 CAL、Judge readiness、冻结、诊断或测试结论；必须创建新候选版本并重跑所有受影响门禁。
+4. Q42 或 Q46 从 pending 转为已决定时，必须同步两份 PRD、`decision_resolution_matrix`、manifest 和批准记录；Q46 最迟在第一个 H-* 前冻结。
+5. 冻结批准人负责确认失效范围；主要实现者不得自行缩小重跑范围或恢复 `frozen`。
 
 ## 4. 决议语义
 

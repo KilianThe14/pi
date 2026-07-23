@@ -10,7 +10,9 @@
     "upstream": {
       "document_id": "IH0AdLTo6o2RrzxjGqtcT8ZInad",
       "revision": 290,
-      "markdown_sha256": "1763bd9c63f6e99afb996bb2ea64a5cba4fa479a9aca988897e8464f9418b2da"
+      "markdown_sha256": "e502d6475944a8c197168c03ebdb95c66d49f22d9ab747f08284f2904b1d21bb",
+      "hash_algorithm": "sha256(lark-cli JSON | jq -j .data.document.content)",
+      "content_bytes": 149917
     }
   },
   "sync_state": {
