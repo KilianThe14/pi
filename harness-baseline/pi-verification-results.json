@@ -81,8 +81,15 @@
     "prd_sync_lock_sha256": "f758df252373a39d99084fc9dbbe3ee2cf726a9f98f0c06e9b561d2c56367e4d",
     "mock_artifacts_lock_sha256": "72194abf52eab66660ba013f62a30deb0549d0b566087441d8bfdab53c50cc86",
     "approval_conditions_sha256": "9807874902c0ea4b71865c53644158364a7df0c45cc0a53a5f7bcb9347377694",
-    "validated_fork_commit": null,
+    "validated_fork_commit": "f46bd1087b6f5625fae5f7f301a0249a527306a7",
     "result": "PASS 8/8 verifier checks and PASS 5/5 adapter tests"
+  },
+  "post_commit_verification": {
+    "performed_at": "2026-07-23T20:10:52+08:00",
+    "validated_fork_commit": "f46bd1087b6f5625fae5f7f301a0249a527306a7",
+    "command": "node harness-baseline/scripts/verify.mjs",
+    "exit_code": 0,
+    "result": "PASS 8/8 verification checks passed"
   },
   "final_upstream_test_rerun": {
     "performed_at": "2026-07-23T20:09:53+08:00",
